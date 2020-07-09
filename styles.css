@@ -1,0 +1,90 @@
+body {
+	margin: 0;
+	padding: 0;
+	font-family: verdana, ＭＳゴシック;
+	background-color: #555;
+}
+
+header, footer {
+	width: 100%;
+}
+
+/* 余白ゼロ */
+.no-margin {
+	margin: 0;
+}
+.no-padding {
+	padding: 0;
+}
+
+/* 文字色 */
+.color-blue {
+	color: blue;
+}
+
+/* フォントサイズ */
+.fs1rem {
+	font-size: 1rem;
+}
+.fs12 {
+	font-size: 12px;
+}
+.fs13 {
+	font-size: 13px;
+}
+.fs14 {
+	font-size: 14px;
+}
+.fs15 {
+	font-size: 15px;
+}
+.fs16 {
+	font-size: 16px;
+}
+.fs18 {
+	font-size: 18px;
+}
+
+/* 文字太さ */
+.bold {
+	font-weight: bold;
+}
+
+/* 左右上下中央寄せ */
+.center {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+
+/* ライン */
+.under-line {
+	border-bottom: 1px solid #555;
+}
+.upper-line {
+	border-top: 1px solid #555;
+}
+
+#can {
+	border: 1px solid #000;*/
+}
+#can2 {
+	border: 1px solid #000;*/
+}
+#can3 {
+	border: 1px solid #000;*/
+}
+#can4 {
+	border: 1px solid #000;*/
+}
+
+.container {
+	width: 800px;
+	background-color: #fff;
+}
+
+.hideCursor {
+	cursor: none;
+}
