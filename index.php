@@ -14,6 +14,14 @@ $values = [
 	'各扇の開始角度、終了角度',
 ];
 
+$sectInfo = [
+	["blue", "php", 299],
+	["green", "pdo", 100],
+	["red", "mysql", 49],
+];
+
+$sectorInfo = json_encode($sectInfo);
+
 ?>
 
 <!DOCTYPE html>
@@ -86,6 +94,9 @@ $values = [
 	© 2020 しずか
 	</p>
 </footer>
+<script>
+	const arr = <?php echo $sectorInfo; ?>;
+</script>
 <script src="circle.js"></script>
 <script src="main.js"></script>
 </body>

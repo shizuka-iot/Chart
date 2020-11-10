@@ -4,29 +4,37 @@
 // offsetやclient座標は円の座標に関係しないのでプロパティにせず
 // グローバル変数として扱うことにする。
 // オフセットは複数のインスタンス（キャンバス）ごとに違う値を持つので
-// グローバルでは駄目！！修正が必要だがどうすれば？
-let px = 0; // イベントのたびに数値が変わる(代入する)のでlet
-let py = 0; // イベントのたびに数値が変わる(代入する)のでlet
-let ox = 0; // イベントのたびに数値が変わる(代入する)のでlet
-let oy = 0; // イベントのたびに数値が変わる(代入する)のでlet
+let px = 0; // e.pageX
+let py = 0; // e.pageY
+let ox = 0; // e.offsetX
+let oy = 0; // e.offsetY
 
 
 /* 円を描くメソッド */
 class Circle
 {
-	constructor( canvas_id , sectorInfo, radius, center_x, center_y, type, max )
-	{
+	constructor(
+		canvas_id, // キャンバスIDを指定
+		sectorInfo, // 表示するデータを配列で受け取る
+		radius, // 円グラスの半径を指定
+		center_x, // 中心X座標
+		center_y, // 中心Y座標
+		type, // 表示するグラスのタイプを指定
+		max // レーダーチャート用。基準となる最大値。円グラフには影響しない
+	)
 
-		// 各扇の情報を全て2次元配列で取得。
+	{
+		// コンストラクタで受け取った各扇の情報をプロパティに格納
 		this.sectorInfo = sectorInfo;
 
 		// 配列を量の降順にソート
 		if(type !== 2)
 		{
-			this.sectorInfo.sort(function(a,b){
-				return ( b[2] - a[2] );
+			this.sectorInfo.sort(function(a,b) {
+				return (b[2] - a[2]);
 			});
 		}
+
 
 		this.centerX = center_x;
 		this.centerY = center_y;
@@ -34,6 +42,9 @@ class Circle
 
 		this.type = type;
 		this.max = max;
+
+		this.edge_flag = 1;// 扇の縁を描画するか否かのフラグ。基本的に描画するフラグを建てておく
+		this.checkSectorValueForEdge()// 項目が一つしかなく他の項目の値が0（100％)かどうか検証
 
 		/*****************************************
 		 * キャンバスの初期化
@@ -390,16 +401,19 @@ class Circle
 		this.con.fill();
 
 		// 扇の縁を白で描画。各扇に隙間が空いているように見える。
+		if (this.edge_flag)
+		{
 		this.con.beginPath();
 		this.con.arc(
 			this.centerX, this.centerY, this.radius + increase,// x座標、y座標、半径、
 			(start-90)*Math.PI/180,// 開始角
 			(finish-90)*Math.PI/180, false)// 終了角
 		this.con.lineTo(this.centerX, this.centerY);
-		this.con.lineWidth = 2;
+		this.con.lineWidth = 1;// 扇の縁の線の太さ
 		this.con.closePath();
 		this.con.strokeStyle = "#fff";
 		this.con.stroke();
+		}
 	}
 
 	// ドーナツ型グラフを作成したい場合はこのメソッドで中心に白い円を描き塗りつぶす。
@@ -408,9 +422,12 @@ class Circle
 		this.con.globalAlpha = 1;
 		this.con.beginPath();
 		this.con.arc(
-			this.centerX, this.centerY, this.radius/2,// x座標、y座標、半径、
-			(0)*Math.PI/180,// 開始角
-			(360)*Math.PI/180, false)// 終了角
+			this.centerX,		 // x座標
+			this.centerY,		 // y座標
+			this.radius/2,	 // 半径
+			// 2,	 // 半径
+			(0)*Math.PI/180, // 開始角
+			(360)*Math.PI/180, false); // 終了角
 		this.con.fillStyle = "#fff";
 		this.con.closePath();
 		this.con.fill();
@@ -710,6 +727,24 @@ class Circle
 	}
 
 
+	checkSectorValueForEdge()
+	{
+		let edge_count = 0;
+		for (let i=0; i<this.sectorInfo.length; i++)
+		{
+			if (this.sectorInfo[i][2])
+			{
+				console.log(this.sectorInfo[i][2]);
+				console.log("edge_count"+edge_count);
+				edge_count++;
+			}
+		}
+
+		if (edge_count === 1)
+		{
+			this.edge_flag = 0;
+		}
+	}
 
 
 
@@ -742,7 +777,11 @@ class Circle
 			this.sectorInfo[i][1]+":"+this.cutNum((this.sectorInfo[i][2]/this.sum)*100),
 			this.centerX - this.radius/2, this.centerY + this.radius + i*20+50);
 			this.con.fillStyle = "#fff";// 色を指定
+
+			if (this.sectorInfo[i][2])
+			{
 			this.con.fillText(this.cutNum(this.sectorInfo[i][2]/this.sum*100)+"%", this.halfDegrees[i][0], this.halfDegrees[i][1]);
+			}
 		}
 		for( let i=0; i<this.sectorInfo.length; i++ )
 		{

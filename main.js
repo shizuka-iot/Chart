@@ -53,8 +53,11 @@ const sectInfo5 = [
 	["", "国語",30],
 ];
 
+console.log(arr);
+
 const circle = [];
-circle.push(new Circle('can', sectInfo3, 100, 200, 200, 2, 100));
+// circle.push(new Circle('can', sectInfo3, 100, 200, 200, 2, 100));
+circle.push(new Circle('can', arr, 100, 200, 200, 0, 100));
 circle.push(new Circle('can2', sectInfo2, 80, 200, 200, 0, 100));
 circle.push(new Circle('can', sectInfo, 100, 560, 200, 1, 100));
 circle.push(new Circle('can2', ex, 120, 560, 200, 1, 100));
