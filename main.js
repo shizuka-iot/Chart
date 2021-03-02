@@ -1,7 +1,4 @@
 
-// 円の半径は定数で保持。
-// const RADIUS = 100;
-
 
 /* 扇の情報を2次元配列で全て保持する */
 const sectInfo = [
@@ -53,10 +50,8 @@ const sectInfo5 = [
 	["", "国語",30],
 ];
 
-console.log(arr);
 
 const circle = [];
-// circle.push(new Circle('can', sectInfo3, 100, 200, 200, 2, 100));
 circle.push(new Circle('can', arr, 100, 200, 200, 0, 100));
 circle.push(new Circle('can2', sectInfo2, 80, 200, 200, 0, 100));
 circle.push(new Circle('can', sectInfo, 100, 560, 200, 1, 100));
@@ -65,30 +60,14 @@ circle.push(new Circle('can3', sectInfo4, 200, 400, 250, 0, 100));
 circle.push(new Circle('can4', sectInfo5, 200, 400, 250, 2, 100));
 
 
-/*
-const circle = new Circle('can', sectInfo3, 120, 200, 200, 2, 100);
-const circle2 = new Circle('can', sectInfo, 100, 560, 200, 1, 100);
-const circle3 = new Circle('can2', sectInfo2, 120, 200, 200, 0, 100);
-const circle4 = new Circle('can2', ex, 120, 560, 200, 1, 100);
-const circle5 = new Circle('can3', sectInfo4, 200, 400, 250, 0, 100);
-const circle6 = new Circle('can4', sectInfo5, 200, 400, 250, 2, 100);
-*/
-
 function update()
 {
 	for(let i=0; i<circle.length; i++)
 	{
 		circle[i].update();
 	}
-	/*
-	circle.update();
- 	circle2.update();
- 	circle3.update();
- 	circle4.update();
- 	circle5.update();
- 	circle6.update();
-	*/
 }
+
 function draw()
 {
 
@@ -101,15 +80,6 @@ function draw()
 	{
 		circle[i].draw();
 	}
-
-	/*
-	circle.draw();
- 	circle2.draw();
- 	circle3.draw();
- 	circle4.draw();
- 	circle5.draw();
- 	circle6.draw();
-	*/
 }
 function mainLoop()
 {

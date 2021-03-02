@@ -10,7 +10,17 @@ let ox = 0; // e.offsetX
 let oy = 0; // e.offsetY
 
 
-/* 円を描くメソッド */
+/*
+ * グラフ生成クラス
+ *
+ * @param string canvas_id
+ * @param array sectorInfo
+ * @param int radius
+ * @param int center_x
+ * @param int center_y
+ * @param int type
+ * @param int max
+ */
 class Circle
 {
 	constructor(
@@ -51,7 +61,6 @@ class Circle
 		*****************************************/
 		this.canvas = canvas_id;
 		this.can = document.getElementById(canvas_id); 
-		// this.can = document.querySelector('#can');でもオッケー
 		
 		// ブラウザがキャンバスに対応しているかチェックして、
 		// 未対応ならリターン。
@@ -110,16 +119,14 @@ class Circle
 
 		// これなんのプロパティだったか忘れた。
 		// どうやらパーセンテージを表示するsetHalfDegreesで使うようだ。
-		this.x = 0;
-		this.y = 0;
+		this.halfDegreeX = 0;
+		this.halfDegreeY = 0;
 
 		/* 座標に使用するプロパティ */
 		this.sqrt_xy = 0;// 中心座標とマウスの平方根
 		this.rect = this.can.getBoundingClientRect();
 		this.absoluteCenterX = this.cutNum(this.rect.left+this.centerX+window.pageXOffset);
 		this.absoluteCenterY = this.cutNum(this.rect.top+this.centerY+window.pageYOffset);
-		// console.log(this.absoluteCenterX);
-		// console.log(this.absoluteCenterY);
 
 
 		/* レーダーチャート */
@@ -138,28 +145,26 @@ class Circle
 
 
 
-	/****************************************************
+	/*
 	 * イベントリスナー
-	****************************************************/
-	// マウスイベント。イベント情報はグローバル変数に代入。
+	 * グラフとの当たり判定をするためにマウスを監視
+	 *
+	 */
 	mouseMove(e)
 	{
 		// クライアントはブラウザの左上を0,0としてそこからのマウスの座標を取得。
 		// オフセットはターゲットエレメントの左上を0,0としてそこからのマウスの座標を取得。
-		/*
-		cx = e.clientX;
-		cy = e.clientX;
-		*/
 		px = e.pageX;
 		py = e.pageY;
 		ox = e.offsetX;
 		oy = e.offsetY;
 	}
 	
-	/****************************************************
-	 * 更新・描画
-	****************************************************/
-	/* 更新メソッド。この中に色んな処理の更新をまとめて入れる */
+
+
+	/*
+	 * 更新メソッド。この中に色んな処理の更新をまとめて入れる 
+	 * */
 	update()
 	{
 		/* 中心座標の更新 */
@@ -173,7 +178,11 @@ class Circle
 		/* 増加量の更新 */
 		this.increaseRadius();
 	}
-	/* 描画メソッド。この中に色んな描画処理をまとめて入れる。 */
+
+
+	/*
+	 * 描画メソッド。この中に色んな描画処理をまとめて入れる。 
+	 */
 	draw()
 	{
 		// これはmain.jsのupdate draw mainloopをつくりdrawに静的メソッドを呼び出してやる。
@@ -183,7 +192,9 @@ class Circle
 		// this.drawDebug();
 		// this.drawCircleGraph();
 		// this.drawText();
-		// ドーナツ型円グラフにしたい場合、下記をアンコメント
+
+
+		// グラフのタイプで場合分け
 		switch( this.type )
 		{
 			case 0:
@@ -296,7 +307,6 @@ class Circle
 		this.sectorInfo.forEach( (sect, index) => {
 			this.sum += sect[2];// 量を加算していく。
 		});
-		// console.log(`量の合計:${this.sum}`);
 	}
 
 	/* 配列の初期化 */
@@ -330,9 +340,6 @@ class Circle
 			}
 			angle_sum += this.angles[i];
 		}
-		// console.log('開始角'+this.startAngles);
-		// console.log('終了角'+this.finishAngles);
-		// // console.log(angle_sum);
 	}
 
 
@@ -341,10 +348,6 @@ class Circle
 	{
 		let ex = 0;
 		this.sectorInfo.forEach( (sect, index) => {
-			// // console.log('テスト: '+Math.round( sect[2]/this.sum * 1000));
-			// // console.log('テスト2: '+Math.round( sect[2]/this.sum * 1000)/10);
-			// // console.log('テスト3: '+Math.round( sect[2]/this.sum * 1000*3.6)/10);
-			// // console.log('テスト4: '+Math.round( sect[2]/this.sum * 1000)/10*3.6);
 			this.angles.push( Math.round( sect[2]/this.sum * 1000 * 3.6)/10);
 		});
 
@@ -353,8 +356,6 @@ class Circle
 		this.angles.forEach( (sect, index) => {
 			sum += sect;
 		});
-		// console.log('角度の合計: '+sum);
-		// console.log(`各角度 :${this.angles}`);
 	}
 
 
@@ -491,7 +492,6 @@ class Circle
 	{
 		let halfTextSize = 0;
 		halfTextSize = this.con.measureText(text);
-		// // console.log(halfTextSize);
 		return halfTextSize.width/2;
 	}
 
@@ -504,7 +504,6 @@ class Circle
 		let sin = 0;// サイン
 		let cos = 0;// コサイン
 		let halfTextSize = 0;// テキストサイズのオブジェクトを格納する
-		// let base = 180;
 		
 		/* 各項目のパーセンテージを個別の取り出したいのでループさせる */
 		for( let i = 0; i<this.sectorInfo.length; i++)
@@ -515,51 +514,41 @@ class Circle
 			 * 使用する前にcontext.fontでフォントを指定する必要がある。
 			 * 文字の幅と%を足した幅を変数に格納 */
 			halfTextSize = this.con.measureText(this.cutNum(this.sectorInfo[i][2]/this.sum*100)+"%");
-			// // console.log(halfTextSize);
-			// deg = this.cutNum((this.finishAngles[i] - this.startAngles[i])/2);// 単純に三角形の角度
 			/* 各扇の中間の角度を0-360度まで計算 */
 			deg = this.cutNum(this.startAngles[i]+(this.finishAngles[i] - this.startAngles[i])/2);// 円の角度
-			// deg = this.cutNum(this.startAngles[i]+base+(this.finishAngles[i]+base - this.startAngles[i]+base)/2);
 			sin = Math.sin(this.getRadian(deg));
 			cos = Math.cos(this.getRadian(deg));
 
 
-			this.x = this.cutNum(this.radius * sin);
-			this.y = this.cutNum(this.radius * cos);
+			this.halfDegreeX = this.cutNum(this.radius * sin);
+			this.halfDegreeY = this.cutNum(this.radius * cos);
 			// if( deg === 0 ){ }
-			if( deg > 0 && deg < 90 ){ if(this.x<0)this.x=-this.x;if(this.y>0)this.y=-this.y;}
-			else if( deg > 90 && deg < 180 ){ if(this.x<0)this.x=-this.x;if(this.y<0)this.y=-this.y;}
+			if( deg > 0 && deg < 90 ){ if(this.halfDegreeX<0)this.halfDegreeX=-this.halfDegreeX;if(this.halfDegreeY>0)this.halfDegreeY=-this.halfDegreeY;}
+			else if( deg > 90 && deg < 180 ){ if(this.halfDegreeX<0)this.halfDegreeX=-this.halfDegreeX;if(this.halfDegreeY<0)this.halfDegreeY=-this.halfDegreeY;}
 			// else if( deg === 180 ){ }
-			else if( deg > 180 && deg < 270 ){if(this.x>0)this.x=-this.x;if(this.y<0)this.y=-this.y;}
+			else if( deg > 180 && deg < 270 ){if(this.halfDegreeX>0)this.halfDegreeX=-this.halfDegreeX;if(this.halfDegreeY<0)this.halfDegreeY=-this.halfDegreeY;}
 			// else if( deg === 270 ){}
-			else if( deg > 270 && deg < 360 ){if(this.x>0)this.x=-this.x;if(this.y>0)this.y=-this.y;}
+			else if( deg > 270 && deg < 360 ){if(this.halfDegreeX>0)this.halfDegreeX=-this.halfDegreeX;if(this.halfDegreeY>0)this.halfDegreeY=-this.halfDegreeY;}
 			// else if( deg === 360 ){deg = 360;}
-			// // console.log("sin"+deg+":"+sin);
-			// // console.log("cos"+deg+":"+cos);
-			// // console.log("x:y("+this.x+ ":"+this.y+")");
 
 			
 			/* パーセンテージをどこに配置するか下で調整。
 			 * 中心座標から円周上の点までの距離 */
-			// let sectorCenter = [this.x/100 , this.y/100];
+			// let sectorCenter = [this.halfDegreeX/100 , this.halfDegreeY/100];
 			// this.eachSectorCenters.push( sectorCenter );
-			this.x *= 0.8;
-			this.y *= 0.8;
+			this.halfDegreeX *= 0.8;
+			this.halfDegreeY *= 0.8;
 
 			/* 中心座標+上で求めた半分の角度の円周上の座標-文字サイズ/2 */
-			// this.x = this.cutNum(this.centerX+this.x-halfTextSize.width/2);
-			this.x = this.cutNum(this.centerX+this.x-halfTextSize.width/2);
-			this.y = this.cutNum(this.centerY+this.y);
-			// // console.log("x/2:y/2("+(this.x)+ ":"+(this.y)+")");
+			this.halfDegreeX = this.cutNum(this.centerX+this.halfDegreeX-halfTextSize.width/2);
+			this.halfDegreeY = this.cutNum(this.centerY+this.halfDegreeY);
 
 			/* この操作非常に重要。
 			 * 一旦x,yの座標を入れた配列を作り、
 			 * それを別の配列にプッシュしていけば二次元配列が出来る！ */
-			let array = [this.x, this.y];
+			let array = [this.halfDegreeX, this.halfDegreeY];
 			this.halfDegrees.push(array);
 		}
-		// console.log(this.halfDegrees);
-		console.log(this.eachSectorCenters);
 	}
 
 
@@ -573,7 +562,6 @@ class Circle
 	{
 		// let base = 360/this.sectorInfo.length;
 		const base = (2*Math.PI)/this.sectorInfo.length;
-		// // console.log("base: "+base);
 		let array = [];
 		let x = 0;
 		let y = 0;
@@ -588,13 +576,9 @@ class Circle
 			// チャートの項目の座標
 			ix = Math.round(this.cutNum((Math.sin(i*base)*(this.radius*1.16))));
 			iy = Math.round(this.cutNum((Math.cos(i*base)*(this.radius*1.16))));
-			// // console.log("x: "+x+"  y: "+y);
-			// // console.log(y);
 			array = [x, y, ix, iy];
 			this.raderCordinates.push(array);
 		}
-		// console.log("chart:");
-		// console.log(this.raderCordinates);
 	}
 
 	drawRaderChart()
@@ -642,7 +626,6 @@ class Circle
 			ratio = this.cutNum(this.sectorInfo[i][2]/this.max*this.radius)
 			this.ratio.push(ratio);
 		}
-		// console.log(this.ratio);
 	}
 
 	drawRatio()
@@ -690,7 +673,6 @@ class Circle
 			array = [x, y];
 			this.scaleArray.push(array);
 		}
-		// console.log(this.scaleArray);
 
 		this.con.fillStyle = "#000";// 色を指定
 		this.con.lineWidth = 1;
@@ -734,8 +716,6 @@ class Circle
 		{
 			if (this.sectorInfo[i][2])
 			{
-				console.log(this.sectorInfo[i][2]);
-				console.log("edge_count"+edge_count);
 				edge_count++;
 			}
 		}
