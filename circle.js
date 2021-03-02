@@ -59,7 +59,6 @@ class Circle
 		/*****************************************
 		 * キャンバスの初期化
 		*****************************************/
-		this.canvas = canvas_id;
 		this.can = document.getElementById(canvas_id); 
 		
 		// ブラウザがキャンバスに対応しているかチェックして、
@@ -69,30 +68,14 @@ class Circle
 			return;
 		}
 
-		// htmlタグの属性よりも後で記述したこちらの値で上書きされる。
-		// this.can.width = 800;
-		// this.can.height = 600;
-
 		// 取得したキャンバスのコンテキストを取得。
 		// 今後これを操作して２次元の描画を行う。
 		this.con = this.can.getContext('2d');
-
-		/* イベントリスナー */
-		// イベントリスナーは一度呼び出すと常にイベントを監視しているので
-		// ループの中に入れてはいけない。入れると処理が重くなる。
-		// 第一引数はイベントの種類
-		// 第二引数は実行する処理
-		// 第三引数はイベントが伝播する順番が変わるそう
-		// this.can.addEventListener('mousemove', this.mouseMove, false);
-		// アロー関数は定義時のthisの値を拘束してしまう。
-		// だから0に固定されてしまうので、定義を見直す必要がある？
-		// this.can.addEventListener('mousemove', (e) => {this.mouseMove}, false);
 
 		// addEventListenerの.以前はターゲットとなる要素。
 		// windowとすれば全体に対してイベントが適用され、
 		// canとすると取得したキャンバスエレメント上のみイベントが発生する。
 		window.addEventListener('mousemove', this.mouseMove, false);
-		// window.addEventListener('mousemove', mouseMove, false);
 
 		/* 角度に関するプロパティ */
 		this.sum = 0; //　各項目の量の合計を保持するプロパティ
