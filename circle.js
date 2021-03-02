@@ -13,7 +13,7 @@ let oy = 0; // e.offsetY
 /*
  * グラフ生成クラス
  */
-class Circle
+class DrawCircle
 {
 	/*
 	 * コンストラクタ

@@ -52,12 +52,12 @@ const sectInfo5 = [
 
 
 const circle = [];
-circle.push(new Circle('can', arr, 100, 200, 200, 0, 100));
-circle.push(new Circle('can2', sectInfo2, 80, 200, 200, 0, 100));
-circle.push(new Circle('can', sectInfo, 100, 560, 200, 1, 100));
-circle.push(new Circle('can2', ex, 120, 560, 200, 1, 100));
-circle.push(new Circle('can3', sectInfo4, 200, 400, 250, 0, 100));
-circle.push(new Circle('can4', sectInfo5, 200, 400, 250, 2, 100));
+circle.push(new DrawCircle('can', arr, 100, 200, 200, 0, 100));
+circle.push(new DrawCircle('can2', sectInfo2, 80, 200, 200, 0, 100));
+circle.push(new DrawCircle('can', sectInfo, 100, 560, 200, 1, 100));
+circle.push(new DrawCircle('can2', ex, 120, 560, 200, 1, 100));
+circle.push(new DrawCircle('can3', sectInfo4, 200, 400, 250, 0, 100));
+circle.push(new DrawCircle('can4', sectInfo5, 200, 400, 250, 2, 100));
 
 
 function update()
@@ -71,10 +71,10 @@ function update()
 function draw()
 {
 
-	Circle.clear('can');
-	Circle.clear('can2');
-	Circle.clear('can3');
-	Circle.clear('can4');
+	DrawCircle.clear('can');
+	DrawCircle.clear('can2');
+	DrawCircle.clear('can3');
+	DrawCircle.clear('can4');
 
 	for(let i=0; i<circle.length; i++)
 	{
