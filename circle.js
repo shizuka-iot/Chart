@@ -149,7 +149,7 @@ class DrawCircle
 
 	/*
 	 * 更新メソッド。この中に色んな処理の更新をまとめて入れる 
-	 * */
+	 */
 	update()
 	{
 		/* 中心座標の更新 */
@@ -166,17 +166,12 @@ class DrawCircle
 
 
 	/*
-	 * 描画メソッド。この中に色んな描画処理をまとめて入れる。 
+	 * 描画メソッド。この中に描画処理をまとめて入れる。 
 	 */
 	draw()
 	{
-		// これはmain.jsのupdate draw mainloopをつくりdrawに静的メソッドを呼び出してやる。
-		// this.con.clearRect(0, 0, this.can.width, this.can.height);
-
 		// デバッグが必要なら下記をアンコメント
 		// this.drawDebug();
-		// this.drawCircleGraph();
-		// this.drawText();
 
 
 		// グラフのタイプで場合分け
@@ -203,6 +198,8 @@ class DrawCircle
 				this.drawText();
 				break;
 		}
+
+		// マウスオーバーで項目表示
 		// this.drawMouseText();
 	}
 	/* 更新と描画メソッドを入れる。 */
