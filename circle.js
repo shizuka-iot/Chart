@@ -40,20 +40,28 @@ class Circle
 		this.max = max;
 
 		// 配列を量の降順にソート
+		this.sortSectorInfo(this.type);
+
+		// windowのマウスムーブを監視
+		window.addEventListener('mousemove', this.mouseMove, false);
+
+		// プロパティ等を初期化
+		this.initProperties();
+	}// コンストラクタ
+
+
+	/*
+	 * 配列を量が多い順に並び替え
+	 * タイプが2（レーダーチャート）の場合は何もしない
+	 */
+	sortSectorInfo(type)
+	{
 		if(type !== 2) {
 			this.sectorInfo.sort(function(a,b) {
 				return (b[2] - a[2]);
 			});
 		}
-
-		// addEventListenerの.以前はターゲットとなる要素。
-		// windowとすれば全体に対してイベントが適用され、
-		// canとすると取得したキャンバスエレメント上のみイベントが発生する。
-		window.addEventListener('mousemove', this.mouseMove, false);
-
-		this.initProperties();
-	}// コンストラクタ
-
+	}
 
 
 	/*
@@ -98,8 +106,6 @@ class Circle
 
 		this.init_array();// 受け取った配列を初期化。
 
-		// これなんのプロパティだったか忘れた。
-		// どうやらパーセンテージを表示するsetHalfDegreesで使うようだ。
 		this.halfDegreeX = 0;
 		this.halfDegreeY = 0;
 
@@ -108,7 +114,6 @@ class Circle
 		this.rect = this.can.getBoundingClientRect();
 		this.absoluteCenterX = this.cutNum(this.rect.left+this.centerX+window.pageXOffset);
 		this.absoluteCenterY = this.cutNum(this.rect.top+this.centerY+window.pageYOffset);
-
 
 		/* レーダーチャート */
 		this.ratio = [];
