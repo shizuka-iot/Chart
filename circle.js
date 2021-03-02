@@ -478,7 +478,9 @@ class DrawCircle
 	}
 
 
-	/* 扇の中に表示するパーセンテージの位置を計算 */
+	/* 
+	 * 扇の中に表示するパーセンテージの位置を計算 
+	 */
 	setHalfDegrees()
 	{
 		let deg = 0;// 角度
@@ -488,8 +490,7 @@ class DrawCircle
 		let halfTextSize = 0;// テキストサイズのオブジェクトを格納する
 		
 		/* 各項目のパーセンテージを個別の取り出したいのでループさせる */
-		for( let i = 0; i<this.sectorInfo.length; i++)
-		{
+		for( let i = 0; i<this.sectorInfo.length; i++) {
 			this.con.font = "12px Arial, meiryo";
 
 			/* measureTextは文字サイズ情報をオブジェクトで返す関数。
@@ -504,14 +505,23 @@ class DrawCircle
 
 			this.halfDegreeX = this.cutNum(this.radius * sin);
 			this.halfDegreeY = this.cutNum(this.radius * cos);
-			// if( deg === 0 ){ }
-			if( deg > 0 && deg < 90 ){ if(this.halfDegreeX<0)this.halfDegreeX=-this.halfDegreeX;if(this.halfDegreeY>0)this.halfDegreeY=-this.halfDegreeY;}
-			else if( deg > 90 && deg < 180 ){ if(this.halfDegreeX<0)this.halfDegreeX=-this.halfDegreeX;if(this.halfDegreeY<0)this.halfDegreeY=-this.halfDegreeY;}
-			// else if( deg === 180 ){ }
-			else if( deg > 180 && deg < 270 ){if(this.halfDegreeX>0)this.halfDegreeX=-this.halfDegreeX;if(this.halfDegreeY<0)this.halfDegreeY=-this.halfDegreeY;}
-			// else if( deg === 270 ){}
-			else if( deg > 270 && deg < 360 ){if(this.halfDegreeX>0)this.halfDegreeX=-this.halfDegreeX;if(this.halfDegreeY>0)this.halfDegreeY=-this.halfDegreeY;}
-			// else if( deg === 360 ){deg = 360;}
+
+			if( deg > 0 && deg < 90 ){
+				if(this.halfDegreeX<0) this.halfDegreeX = -this.halfDegreeX;
+				if(this.halfDegreeY>0) this.halfDegreeY = -this.halfDegreeY;
+			}
+			else if( deg > 90 && deg < 180 ){
+				if(this.halfDegreeX<0) this.halfDegreeX = -this.halfDegreeX;
+				if(this.halfDegreeY<0) this.halfDegreeY = -this.halfDegreeY;
+			}
+			else if( deg > 180 && deg < 270 ){
+				if(this.halfDegreeX>0) this.halfDegreeX = -this.halfDegreeX;
+				if(this.halfDegreeY<0) this.halfDegreeY = -this.halfDegreeY;
+			}
+			else if( deg > 270 && deg < 360 ){
+				if(this.halfDegreeX>0) this.halfDegreeX = -this.halfDegreeX;
+				if(this.halfDegreeY>0) this.halfDegreeY = -this.halfDegreeY;
+			}
 
 			
 			/* パーセンテージをどこに配置するか下で調整。
@@ -530,16 +540,16 @@ class DrawCircle
 			 * それを別の配列にプッシュしていけば二次元配列が出来る！ */
 			let array = [this.halfDegreeX, this.halfDegreeY];
 			this.halfDegrees.push(array);
-		}
+
+		}// forのとじカッコ
 	}
 
 
 
 
-	/****************************************************
-	 *	レーダーチャート用
-	****************************************************/
-	// レーダーチャート用の座標をセット
+	/*
+	 * レーダーチャート用の座標をセット
+	 */
 	setRaderCordinates()
 	{
 		// let base = 360/this.sectorInfo.length;
