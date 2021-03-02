@@ -12,71 +12,69 @@ let oy = 0; // e.offsetY
 
 /*
  * グラフ生成クラス
- *
- * @param string canvas_id
- * @param array sectorInfo
- * @param int radius
- * @param int center_x
- * @param int center_y
- * @param int type
- * @param int max
  */
 class Circle
 {
-	constructor(
-		canvas_id, // キャンバスIDを指定
-		sectorInfo, // 表示するデータを配列で受け取る
-		radius, // 円グラスの半径を指定
-		center_x, // 中心X座標
-		center_y, // 中心Y座標
-		type, // 表示するグラスのタイプを指定
-		max // レーダーチャート用。基準となる最大値。円グラフには影響しない
-	)
-
+	/*
+	 * コンストラクタ
+	 *
+	 * @param string canvas_id キャンバスIDを指定
+	 * @param array sectorInfo 表示するデータを配列で受け取る
+	 * @param int radius 円グラスの半径を指定
+	 * @param int center_x 中心X座標
+	 * @param int center_y 中心Y座標
+	 * @param int type 表示するグラスのタイプを指定
+	 * @param int max レーダーチャート用。基準となる最大値。円グラフには影響しない
+	 */
+	constructor( canvas_id, sectorInfo, radius, center_x, center_y, type, max = 0 )
 	{
+		// キャンバスの初期化
+		this.initCanvas(canvas_id);
+
 		// コンストラクタで受け取った各扇の情報をプロパティに格納
 		this.sectorInfo = sectorInfo;
+		this.centerX = center_x;
+		this.centerY = center_y;
+		this.radius = radius;
+		this.type = type;
+		this.max = max;
 
 		// 配列を量の降順にソート
-		if(type !== 2)
-		{
+		if(type !== 2) {
 			this.sectorInfo.sort(function(a,b) {
 				return (b[2] - a[2]);
 			});
 		}
-
-
-		this.centerX = center_x;
-		this.centerY = center_y;
-		this.radius = radius;
-
-		this.type = type;
-		this.max = max;
-
-		this.edge_flag = 1;// 扇の縁を描画するか否かのフラグ。基本的に描画するフラグを建てておく
-		this.checkSectorValueForEdge()// 項目が一つしかなく他の項目の値が0（100％)かどうか検証
-
-		/*****************************************
-		 * キャンバスの初期化
-		*****************************************/
-		this.can = document.getElementById(canvas_id); 
-		
-		// ブラウザがキャンバスに対応しているかチェックして、
-		// 未対応ならリターン。
-		if( typeof this.can.getContext === 'undefined')
-		{
-			return;
-		}
-
-		// 取得したキャンバスのコンテキストを取得。
-		// 今後これを操作して２次元の描画を行う。
-		this.con = this.can.getContext('2d');
 
 		// addEventListenerの.以前はターゲットとなる要素。
 		// windowとすれば全体に対してイベントが適用され、
 		// canとすると取得したキャンバスエレメント上のみイベントが発生する。
 		window.addEventListener('mousemove', this.mouseMove, false);
 
+		this.initProperties();
+	}// コンストラクタ
+
+
+
+	/*
+	 * キャンバス初期化。コンテキストの取得。
+	 *
+	 * @param string canvas_id
+	 */
+	initCanvas(canvas_id)
+	{
+		this.can = document.getElementById(canvas_id); 
+		this.con = this.can.getContext('2d');
+
+		// ブラウザがキャンバスに対応しているかチェックして未対応ならリターン。
+		if( typeof this.can.getContext === 'undefined')
+		{
+			return;
+		}
+	}
+
+	initProperties()
+	{
 		/* 角度に関するプロパティ */
 		this.sum = 0; //　各項目の量の合計を保持するプロパティ
 		this.angles = []; // 各項目の持つ角度を配列で保持。
@@ -120,10 +118,9 @@ class Circle
 		this.drawChartScale();
 		this.setchartRatio()
 
-
-		// this.drawRaderChart();
-
-	}// コンストラクタ
+		this.edge_flag = 1;// 扇の縁を描画するか否かのフラグ。基本的に描画するフラグを建てておく
+		this.checkSectorValueForEdge();// 項目が一つしかなく他の項目の値が0（100％)かどうか検証
+	}
 
 
 
