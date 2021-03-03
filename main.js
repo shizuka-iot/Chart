@@ -89,7 +89,6 @@ function mainLoop()
 }
 
 
-/* 実行 */
 window.onload = function() {
 	mainLoop();
 }
