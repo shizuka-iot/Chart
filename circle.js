@@ -1,3 +1,4 @@
+
 'use strict';
 
 // グローバル変数
@@ -81,6 +82,10 @@ class DrawCircle
 		}
 	}
 
+
+	/*
+	 * プロパティの初期化や計算
+	 */
 	initProperties()
 	{
 		/* 角度に関するプロパティ */
@@ -121,7 +126,7 @@ class DrawCircle
 		this.raderCordinates = [];
 		this.setRaderCordinates();
 		this.drawChartScale();
-		this.setchartRatio()
+		this.setChartRatio();
 
 		this.edge_flag = 1;// 扇の縁を描画するか否かのフラグ。基本的に描画するフラグを建てておく
 		this.checkSectorValueForEdge();// 項目が一つしかなく他の項目の値が0（100％)かどうか検証
@@ -173,50 +178,76 @@ class DrawCircle
 		// デバッグが必要なら下記をアンコメント
 		// this.drawDebug();
 
-
 		// グラフのタイプで場合分け
 		switch( this.type )
 		{
 			case 0:
-				this.drawCircleGraph();
-				this.drawText();
+				this.drawStandardCircleGraph();
 				break;
 			case 1:
-				this.drawCircleGraph();
-				this.drawCenterCircle();
-				this.drawText();
+				this.drawDonutCircleGraph();
 				break;
 			case 2:
-				this.drawRaderChart();
-				this.drawChartScale();
-				this.drawRatio();
-				this.drawChartItem();
-				this.drawScaleNumber();
+				this.drawAllRaderChart();
 				break;
 			default:
-				this.drawCircleGraph();
-				this.drawText();
+				this.drawStandardCircleGraph();
 				break;
 		}
 
 		// マウスオーバーで項目表示
 		// this.drawMouseText();
 	}
-	/* 更新と描画メソッドを入れる。 */
+
+
+	/*
+	 * 更新と描画メソッドを入れる
+	 */
 	mainLoop()
 	{
-		// requestAnimationFrame(this.mainLoop);
-		// requestAnimationFrame( () => {this.mainLoop();});
 		this.update();
 		this.draw();
 	}
 
 
+	/*
+	 * ドーナツ型円グラグを描画
+	 */
+	drawDonutCircleGraph()
+	{
+		this.drawCircleGraph();
+		this.drawCenterCircle();
+		this.drawCircleItems();
+	}
 
 
-	/****************************************************
+	/*
+	 * 標準円グラフを描画
+	 */
+	drawStandardCircleGraph()
+	{
+		this.drawCircleGraph();
+		this.drawCircleItems();
+	}
+
+
+	/*
+	 * レーダーチャート関連全て描画
+	 */
+	drawAllRaderChart()
+	{
+		this.drawRaderChart();
+		this.drawChartScale();
+		this.drawRatio();
+		this.drawChartItem();
+		this.drawScaleNumber();
+	}
+
+
+	/*
 	 * 画面クリア
-	****************************************************/
+	 * キャンバスごとに個別に呼び出して画面クリアする
+	 */
 	static clear(canvas_id)
 	{
 		let can = document.getElementById(canvas_id); 
@@ -225,29 +256,31 @@ class DrawCircle
 	}
 
 
-
-
-	/****************************************************
-	 * 計算関数定義
-	****************************************************/
-	// 少数第一位までで切り捨てるメソッド
+	/*
+	 * 少数第一位までで切り捨てるメソッド
+	 *
+	 * @param int number
+	 */
 	cutNum(number)
 	{
 		return Math.round(number * 10)/10;
 	}
 
-	// 角度を入力してラジアンを得る。
+
+	/*
+	 * 角度を入力してラジアンを得る。
+	 *
+	 * @param int deg
+	 */
 	getRadian(deg)
 	{
 		return deg * (Math.PI / 180 );
 	}
 
 
-
-
-
-
-	/* デバッグ用のテキストを表示。draw()メソッドに入れる。 */
+	/*
+	 * デバッグ用のテキストを表示。draw()メソッドに入れる。
+	 */
 	drawDebug()
 	{
 		// 事前準備
@@ -261,10 +294,7 @@ class DrawCircle
 		this.con.fillText("hit:"+this.hitted, this.centerX - this.radius, this.centerY - this.radius - 70);
 		this.con.fillText("sqrt_xy:"+this.sqrt_xy, this.centerX - this.radius, this.centerY + this.radius + 20);
 		this.con.fillText("pageX,Y:("+px+","+py+")", this.centerX - this.radius, this.centerY + this.radius + 40);
-
-		// this.con.fillText("client:("+cx+","+cy+")", this.centerX - this.radius, this.centerY + this.radius + 80);
 		this.con.fillText("pxxxx:("+px+","+py+")", this.centerX - this.radius, this.centerY + this.radius + 100);
-
 		this.con.fillText(
 			"elem + center + scroll:("+this.cutNum(this.rect.left+this.centerX+window.pageXOffset)+
 			","+this.cutNum(this.rect.top+this.centerY+window.pageYOffset)+")",
@@ -277,13 +307,9 @@ class DrawCircle
 	}
 
 
-
-
-
-	/****************************************************
-	 * 円グラグ計算メソッド
-	 ****************************************************/
-	/* 項目の各量を足して合計を求めるメソッド。this.sumプロパティに入れる */
+	/*
+	 * 項目の各量を足して合計を求めるメソッド。this.sumプロパティに入れる
+	 */
 	setQuantities()
 	{
 		this.sectorInfo.forEach( (sect, index) => {
@@ -291,7 +317,10 @@ class DrawCircle
 		});
 	}
 
-	/* 配列の初期化 */
+
+	/*
+	 * 配列の初期化
+	 */
 	init_array()
 	{
 		for( let i=0; i<this.sectorInfo.length; i++)
@@ -303,19 +332,18 @@ class DrawCircle
 	}
 
 
-	// 扇の開始角・終了角を配列に格納するメソッド。
+	/*
+	 * 扇の開始角・終了角を配列に格納するメソッド。
+	 */
 	setStartFinishAngles()
 	{
 		let angle_sum = 0;
-		for( let i=0; i<this.angles.length; i++)
-		{
-			if( i === 0 )
-			{
+		for( let i=0; i<this.angles.length; i++){
+			if( i === 0 ){
 				this.startAngles.push(0)
 				this.finishAngles.push(this.angles[i]);
 			}
-			else
-			{
+			else{
 				// this.startAngles.push(angle_sum+1)
 				this.startAngles.push(this.cutNum(angle_sum))
 				this.finishAngles.push(this.cutNum(angle_sum+this.angles[i]));
@@ -325,7 +353,9 @@ class DrawCircle
 	}
 
 
-	// 各扇の角度を計算して配列に格納。
+	/* 
+	 * 各扇の角度を計算して配列に格納。
+	 */
 	setEachAngles()
 	{
 		let ex = 0;
@@ -341,46 +371,20 @@ class DrawCircle
 	}
 
 
-
-
-	/****************************************************
-	 * 円グラグ描画メソッド
-	****************************************************/
-	/* 扇を一つだけ描画するメソッド。これをループで回して円グラグを作る */
+	/*
+	 * 扇を一つだけ描画するメソッド。これをループで回して円グラグを作る
+	 */
 	drawSector(start, finish, color, increase)
-	// drawSector(start, finish, color, increase, centerX, centerY)
 	{
-		// 扇を描画
 		this.con.beginPath();// パスで描画するということを宣言。
 
 		this.con.arc(
 			this.centerX, this.centerY, this.radius+ increase,// x座標、y座標、半径、
 			(start-90)*Math.PI/180,// 開始角
 			(finish-90)*Math.PI/180, false)// 終了角
-		/*
-		this.con.arc(
-			this.centerX+centerX, this.centerY+centerY, this.radius+ increase,// x座標、y座標、半径、
-			(start-90)*Math.PI/180,// 開始角
-			(finish-90)*Math.PI/180, false)// 終了角
-			*/
 		this.con.lineTo(this.centerX, this.centerY);
 		this.con.fillStyle = color;// 色を指定
 
-		/* 影の設定。影は一度宣言するとずっと適応されるので必ずリセットする。
-		 * 影はCPU使用率が少し上がるので注意 */
-
-		/*
-		this.con.shadowOffsetX = 4;
-		this.con.shadowOffsetY = 4;
-		this.con.shadowBlur = 4;
-		this.con.shadowColor = 'rgba(0, 0, 0, 0.3)';
-
-
-		this.con.shadowOffsetX = 0;
-		this.con.shadowOffsetY = 0;
-		this.con.shadowBlur = 0;
-		this.con.shadowColor = 'rgba(0, 0, 0, 0.3)';
-		*/
 		this.con.fill();
 
 		// 扇の縁を白で描画。各扇に隙間が空いているように見える。
@@ -399,7 +403,10 @@ class DrawCircle
 		}
 	}
 
-	// ドーナツ型グラフを作成したい場合はこのメソッドで中心に白い円を描き塗りつぶす。
+
+	/*
+	 * ドーナツ型グラフを作成したい場合はこのメソッドで中心に白い円を描き塗りつぶす。
+	 */
 	drawCenterCircle()
 	{
 		this.con.globalAlpha = 1;
@@ -408,7 +415,6 @@ class DrawCircle
 			this.centerX,		 // x座標
 			this.centerY,		 // y座標
 			this.radius/2,	 // 半径
-			// 2,	 // 半径
 			(0)*Math.PI/180, // 開始角
 			(360)*Math.PI/180, false); // 終了角
 		this.con.fillStyle = "#fff";
@@ -416,7 +422,10 @@ class DrawCircle
 		this.con.fill();
 	}
 
-	/* 円グラフを描画するメソッド。ループで各セクターを描画して円グラフを形成 */
+
+	/*
+	 * 扇を組み合わせて円グラフ全体を描画するメソッド。
+	 */
 	drawCircleGraph()
 	{
 		for( let i=0; i<this.sectorInfo.length; i++ )
@@ -446,30 +455,36 @@ class DrawCircle
 		}
 	}
 
-	drawMouseText(sectorItem)
+
+	/*
+	 * マウスオーバーでポインターに項目を表示させるメソッド
+	 */
+	drawMouseText()
 	{
-		for( let i=0; i<this.hitted.length; i++)
-		{
+		for( let i=0; i<this.hitted.length; i++){
 			this.con.font = "20px Arial, meiryo";
-			// let textSize = this.con.measureText(this.sectorInfo[i][1]+":"+this.sectorInfo[i][2]);
 			let textSize = this.con.measureText(this.sectorInfo[i][1]);
-			if(this.hitted[i])
-			{
-				// this.can.classList.add('hideCursor');
-				this.con.fillStyle = "#000";// 色を指定
+			if(this.hitted[i]){
+				this.con.fillStyle = "#000";// 背景色を白に
 				this.con.fillRect(ox, oy-20, textSize.width, 20);
-				this.con.fillStyle = "#fff";// 色を指定
-				// this.con.fillText(this.sectorInfo[i][1]+":"+this.sectorInfo[i][2], ox, oy-4);
+				this.con.fillStyle = "#fff";// 文字色を黒に
 				this.con.fillText(this.sectorInfo[i][1], ox, oy-4);
 			}
 			else if(!this.hitted[i]) {
-			// this.can.classList.remove('hideCursor');
 			}
-			this.con.fillStyle = "#000";// 色を指定
+			this.con.fillStyle = "#000";
 			this.con.fillText("hit:"+this.hitted, this.centerX - this.radius, this.centerY - this.radius - 70);
 		}
 	}
 
+
+	/*
+	 * 円グラフの項目を入れてその項目の半分のサイズを取得したくて作成したメソッド
+	 *
+	 * @param string text
+	 *
+	 * @return int 
+	 */
 	getHalfText(text)
 	{
 		let halfTextSize = 0;
@@ -502,7 +517,6 @@ class DrawCircle
 			sin = Math.sin(this.getRadian(deg));
 			cos = Math.cos(this.getRadian(deg));
 
-
 			this.halfDegreeX = this.cutNum(this.radius * sin);
 			this.halfDegreeY = this.cutNum(this.radius * cos);
 
@@ -522,12 +536,9 @@ class DrawCircle
 				if(this.halfDegreeX>0) this.halfDegreeX = -this.halfDegreeX;
 				if(this.halfDegreeY>0) this.halfDegreeY = -this.halfDegreeY;
 			}
-
 			
 			/* パーセンテージをどこに配置するか下で調整。
 			 * 中心座標から円周上の点までの距離 */
-			// let sectorCenter = [this.halfDegreeX/100 , this.halfDegreeY/100];
-			// this.eachSectorCenters.push( sectorCenter );
 			this.halfDegreeX *= 0.8;
 			this.halfDegreeY *= 0.8;
 
@@ -545,14 +556,11 @@ class DrawCircle
 	}
 
 
-
-
 	/*
 	 * レーダーチャート用の座標をセット
 	 */
 	setRaderCordinates()
 	{
-		// let base = 360/this.sectorInfo.length;
 		const base = (2*Math.PI)/this.sectorInfo.length;
 		let array = [];
 		let x = 0;
@@ -573,6 +581,10 @@ class DrawCircle
 		}
 	}
 
+
+	/*
+	 * レーダーチャートを描画
+	 */
 	drawRaderChart()
 	{
 		this.con.globalAlpha = 1;
@@ -585,18 +597,9 @@ class DrawCircle
 		{
 			this.con.lineTo( this.raderCordinates[i][0]+this.centerX, -this.raderCordinates[i][1]+this.centerY);
 		}
-			this.con.closePath();
-			/* 影を設定 */
-			this.con.shadowOffsetX = 4;
-			this.con.shadowOffsetY = 4;
-			this.con.shadowBlur = 4;
-			this.con.shadowColor = 'rgba(0, 0, 0, 0.3)';
-			this.con.fill();
+		this.con.closePath();
 
-			/* 影をリセット */
-			this.con.shadowOffsetX = 0;
-			this.con.shadowOffsetY = 0;
-			this.con.shadowBlur = 0;
+		this.drawChartShadow();
 
 		for(let i=0; i<this.sectorInfo.length; i++)
 		{
@@ -609,7 +612,29 @@ class DrawCircle
 		}
 	}
 
-	setchartRatio()
+	/*
+	 * 影を描画
+	 */
+	drawChartShadow()
+	{
+		/* 影を設定 */
+		this.con.shadowOffsetX = 4;
+		this.con.shadowOffsetY = 4;
+		this.con.shadowBlur = 4;
+		this.con.shadowColor = 'rgba(0, 0, 0, 0.3)';
+		this.con.fill();
+
+		/* 影をリセット */
+		this.con.shadowOffsetX = 0;
+		this.con.shadowOffsetY = 0;
+		this.con.shadowBlur = 0;
+	}
+
+
+	/*
+	 * レーダーチャート用の比率を計算して配列に格納
+	 */
+	setChartRatio()
 	{
 		let ratio = 0;
 		
@@ -620,6 +645,10 @@ class DrawCircle
 		}
 	}
 
+
+	/*
+	 * レーダーチャートの比率部分を描画
+	 */
 	drawRatio()
 	{
 		this.con.globalAlpha = 0.5;
@@ -634,6 +663,11 @@ class DrawCircle
 			this.con.closePath();
 			this.con.fill();
 	}
+
+
+	/*
+	 * レーダーチャートの項目をチャートの頂点に描画
+	 */
 	drawChartItem()
 	{
 		this.con.font = "bold 14px Arial, meiryo";
@@ -647,7 +681,10 @@ class DrawCircle
 		}
 	}
 
-	/* レーダーチャートのメモリを取得 */
+
+	/*
+	 * レーダーチャートのメモリを取得
+	 */
 	drawChartScale()
 	{
 		// 角度を等分したものを基準とする。
@@ -657,6 +694,7 @@ class DrawCircle
 		let x = 0;// 配列に入れるx座標。
 		let y = 0;// 配列に入れるy座標。
 		let array = [];
+
 		for( let i=0; i<this.sectorInfo.length; i++)
 		{
 			// x,yはround等で丸めてはいけない。
@@ -666,8 +704,9 @@ class DrawCircle
 			this.scaleArray.push(array);
 		}
 
-		this.con.fillStyle = "#000";// 色を指定
+		this.con.fillStyle = "#000";
 		this.con.lineWidth = 1;
+
 		this.con.beginPath();
 		for(let j=0; j<5; j++)
 		{
@@ -682,28 +721,34 @@ class DrawCircle
 		}
 	}
 
+
+	/*
+	 * レーダーチャートのメモリを刻む数字を表示するメソッド
+	 */
 	drawScaleNumber()
 	{
 		const base = this.radius/5
 		let scale = this.max/5
+
 		for(let i=1; i<=5; i++)
 		{
 			this.con.globalAlpha = 1;
 			this.con.lineWidth = 1;
-			this.con.font="14px 'ＭＳ　ゴシック'";// フォントを指定。
-			this.con.fillStyle = "#000";// 色を指定
+			this.con.font="14px 'ＭＳ　ゴシック'";
+			this.con.fillStyle = "#000";
 			this.con.fillText(scale*i, this.centerX-20, -i*base+this.centerY);
-			/*
-			this.con.strokeStyle = "#fff";// 色を指定
-			this.con.strokeText(scale*i, this.centerX-20, -i*base+this.centerY);
-			*/
 		}
 	}
 
 
+	/*
+	 * 扇の白い枠を表示するかしないかチェック
+	 * 表示するならthis.edge_flagを立て、そうでないなら下げる
+	 */
 	checkSectorValueForEdge()
 	{
 		let edge_count = 0;
+
 		for (let i=0; i<this.sectorInfo.length; i++)
 		{
 			if (this.sectorInfo[i][2])
@@ -720,39 +765,28 @@ class DrawCircle
 
 
 
-	// 項目などの情報を描画
-	drawText()
+	/*
+	 * 円グラフ用の項目を描画
+	 */
+	drawCircleItems()
 	{
 		this.con.globalAlpha = 1;
-		// this.con.globalAlpha = 0.4;
-		this.con.font="12px 'ＭＳ　ゴシック'";// フォントを指定。
-		this.con.fillStyle = "#000";// 色を指定
-		// this.con.fillText(this.degree, this.centerX + 100, this.centerY + 100);
+		this.con.font="12px 'ＭＳ　ゴシック'";
+		this.con.fillStyle = "#000";
+
 		for( let i=0; i<this.sectorInfo.length; i++ )
 		{
-			/*
-			if( this.hitted[i])
-			{
-				this.con.globalAlpha = 1;
-			}
-			else if( !this.hitted && this.hit()) 
-			{
-				this.con.globalAlpha = 0.4;
-			}
-			else if( !this.hitted[i] && !this.hit())
-			{
-				this.con.globalAlpha = 1;
-			}
-			*/
-			this.con.fillStyle = "#000";// 色を指定
+			this.con.fillStyle = "#000";
 			this.con.fillText(
-			this.sectorInfo[i][1]+":"+this.cutNum((this.sectorInfo[i][2]/this.sum)*100),
-			this.centerX - this.radius/2, this.centerY + this.radius + i*20+50);
-			this.con.fillStyle = "#fff";// 色を指定
+				this.sectorInfo[i][1]+":"+this.cutNum((this.sectorInfo[i][2]/this.sum)*100),
+				this.centerX - this.radius/2, this.centerY + this.radius + i*20+50);
+			this.con.fillStyle = "#fff";
 
-			if (this.sectorInfo[i][2])
-			{
-			this.con.fillText(this.cutNum(this.sectorInfo[i][2]/this.sum*100)+"%", this.halfDegrees[i][0], this.halfDegrees[i][1]);
+			if (this.sectorInfo[i][2]){
+				this.con.fillText(
+					this.cutNum(this.sectorInfo[i][2]/this.sum*100)+"%",
+					this.halfDegrees[i][0],
+					this.halfDegrees[i][1]);
 			}
 		}
 		for( let i=0; i<this.sectorInfo.length; i++ )
@@ -770,10 +804,10 @@ class DrawCircle
 		// まずマウスと中心座標の距離を計算する。
 		let abs_x = 0;
 		let abs_y = 0;
-		// abs_x = Math.abs(px - this.absoluteCenterX);// マウスと中心座標のx座標を絶対値で取得
-		// abs_y = Math.abs(py - this.absoluteCenterY);// マウスと中心座標のy座標を絶対値で取得
+
 		abs_x = Math.abs(px - this.absoluteCenterX);// マウスと中心座標のx座標を絶対値で取得
 		abs_y = Math.abs(py - this.absoluteCenterY);// マウスと中心座標のy座標を絶対値で取得
+
 		// xとyと中心座標との平方根を求める
 		this.sqrt_xy = Math.floor(Math.sqrt(abs_x*abs_x+abs_y*abs_y));
 
@@ -794,8 +828,13 @@ class DrawCircle
 	}
 
 
-	/* あたり判定 */
-	// hit( start, finish )
+	/*
+	 * マウスと円グラフの当たり判定メソッド
+	 * 判定するだけなので実際当たりの場合にどういう処理をするかは別メソッドになる
+	 *
+	 * @param int start
+	 * @param int finish
+	 */
 	hit( start, finish )
 	{
 		// 半径より内側にマウスが合ったら、角度が扇のどれかの範囲に該当していたら。
@@ -806,7 +845,11 @@ class DrawCircle
 		return false;
 	}
 
-	/* マウスオーバーで跳ねるアニメーション */
+
+	/*
+	 * マウスオーバーで跳ねるアニメーション
+	 * 扇の半径を増やしたり減らしたりしてアニメーションさせる
+	 */
 	increaseRadius()
 	{
 		for( let i=0; i<this.sectorInfo.length; i++ )
