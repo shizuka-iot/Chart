@@ -32,44 +32,44 @@ Canvas上にグラフを描画するライブラリを作りました。
 8. window.onloadでメインループ関数を呼び出してください。
 
 	サンプルコード
-	circle = new DrawCircle('can', sectInfomation, 200, 400, 250, 2, 100);
+		circle = new DrawCircle('can', sectInfomation, 200, 400, 250, 2, 100);
 
-	function update()
+		function update()
 
-	{
+		{
 
-		circle.update();
+			circle.update();
 
-	}
-
-
-	function draw()
-
-	{
-
-		DrawCircle.clear('can');
-
-		circle.draw();
-
-	}
+		}
 
 
-	function mainLoop()
+		function draw()
 
-	{
+		{
 
-		requestAnimationFrame(mainLoop);
+			DrawCircle.clear('can');
 
-		update();
+			circle.draw();
 
-		draw();
-
-	}
+		}
 
 
-	window.onload = function() {
+		function mainLoop()
 
-		mainLoop();
+		{
 
-	}
+			requestAnimationFrame(mainLoop);
+
+			update();
+
+			draw();
+
+		}
+
+
+		window.onload = function() {
+
+			mainLoop();
+
+		}
 
