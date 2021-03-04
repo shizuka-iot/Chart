@@ -19,10 +19,12 @@ Canvas上にグラフを描画するライブラリを作りました。
 			["purple", "others", 70],  
 			["#a22041", "C", 120],  
 		];  
-1. グラフを描画したいhtmlファイルの任意の場所にhtml5のcanvas要素を作ります。
-	<canvas id="can"></canvas>
-2. Circle.jsファイルを読み込みます。
-	<script src="Circle.js"></script>
+1. グラフを描画したいhtmlファイルの任意の場所にhtml5のcanvas要素を作ります。  
+		<canvas id="can"></canvas>
+
+2. Circle.jsファイルを読み込みます。  
+		<script src="Circle.js"></script>
+
 3. 読み込んだあとに新しくスクリプトタグを用意するか、新しくJSファイルを作成し読み込みます。
 4. インスタンスを作成します。  
 	new DrawCircle(キャンバスID, グラフ配列, 円グラフの半径, 中心X座標, 中心Y座標, グラフタイプ, レーダーチャートの場合その最大値);
@@ -31,7 +33,7 @@ Canvas上にグラフを描画するライブラリを作りました。
 7. メインループ関数を作成しupdate関数とdraw関数を呼び出してください。
 8. window.onloadでメインループ関数を呼び出してください。
 
-	サンプルコード
+	JSサンプル
 
 
 		circle = new DrawCircle('can', sectInfomation, 200, 400, 250, 2, 100);  
