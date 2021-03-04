@@ -10,15 +10,15 @@ Canvas上にグラフを描画するライブラリを作りました。
 0. グラフのデータを下記のような2次元配列で用意してください。
 	[**色**, **項目**, **値**]
 
-	const sectInfo = [  
-		["red", "php", 80],  
-		["blue", "pdo", 40],  
-		["green", "java", 30],  
-		["#c70067", "html", 20],  
-		["orange", "css", 60],  
-		["purple", "others", 70],  
-		["#a22041", "C", 120],  
-	];  
+		const sectInfo = [  
+			["red", "php", 80],  
+			["blue", "pdo", 40],  
+			["green", "java", 30],  
+			["#c70067", "html", 20],  
+			["orange", "css", 60],  
+			["purple", "others", 70],  
+			["#a22041", "C", 120],  
+		];  
 1. グラフを描画したいhtmlファイルの任意の場所にhtml5のcanvas要素を作ります。
 	<canvas id="can"></canvas>
 2. Circle.jsファイルを読み込みます。
