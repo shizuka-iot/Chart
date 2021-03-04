@@ -34,44 +34,28 @@ Canvas上にグラフを描画するライブラリを作りました。
 	サンプルコード
 
 
-		circle = new DrawCircle('can', sectInfomation, 200, 400, 250, 2, 100);
+		circle = new DrawCircle('can', sectInfomation, 200, 400, 250, 2, 100);  
 
-		function update()
+		function update()  
+		{  
+			circle.update();  
+		}  
 
-		{
+		function draw()  
+		{  
+			DrawCircle.clear('can');  
+			circle.draw();  
+		}  
 
-			circle.update();
-
-		}
-
-
-		function draw()
-
-		{
-
-			DrawCircle.clear('can');
-
-			circle.draw();
-
-		}
-
-
-		function mainLoop()
-
-		{
-
-			requestAnimationFrame(mainLoop);
-
-			update();
-
-			draw();
-
-		}
+		function mainLoop()  
+		{  
+			requestAnimationFrame(mainLoop);  
+			update();  
+			draw();  
+		}  
 
 
-		window.onload = function() {
-
+		window.onload = function() {  
 			mainLoop();
-
 		}
 
