@@ -32,6 +32,8 @@ Canvas上にグラフを描画するライブラリを作りました。
 8. window.onloadでメインループ関数を呼び出してください。
 
 	サンプルコード
+
+
 		circle = new DrawCircle('can', sectInfomation, 200, 400, 250, 2, 100);
 
 		function update()
