@@ -26,31 +26,50 @@ Canvas上にグラフを描画するライブラリを作りました。
 3. 読み込んだあとに新しくスクリプトタグを用意するか、新しくJSファイルを作成し読み込みます。
 4. インスタンスを作成します。
 	new DrawCircle(キャンバスID, グラフ配列, 円グラフの半径, 中心X座標, 中心Y座標, グラフタイプ, レーダーチャートの場合その最大値);
-5. update関数を作成し、その中でインスタンス化したくらすのupdateメソッドを呼び出してください。
+5. update関数を作成し、その中でインスタンス化したクラスのupdateメソッドを呼び出してください。
 6. draw関数を作成し、その中でインスタンス化したくらすのdrawメソッドを呼び出してください。
 7. メインループ関数を作成しupdate関数とdraw関数を呼び出してください。
 8. window.onloadでメインループ関数を呼び出してください。
 
 	サンプルコード
 	circle = new DrawCircle('can', sectInfomation, 200, 400, 250, 2, 100);
+
 	function update()
+
 	{
+
 		circle.update();
+
 	}
+
 
 	function draw()
+
 	{
+
 		DrawCircle.clear('can');
+
 		circle.draw();
+
 	}
+
 
 	function mainLoop()
+
 	{
+
 		requestAnimationFrame(mainLoop);
+
 		update();
+
 		draw();
+
 	}
 
+
 	window.onload = function() {
+
 		mainLoop();
+
 	}
+
