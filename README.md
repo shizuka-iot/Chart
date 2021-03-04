@@ -19,10 +19,12 @@ Canvas上にグラフを描画するライブラリを作りました。
 			["purple", "others", 70],  
 			["#a22041", "C", 120],  
 		];  
-1. グラフを描画したいhtmlファイルの任意の場所にhtml5のcanvas要素を作ります。  
+1. グラフを描画したいhtmlファイルの任意の場所にhtml5のcanvas要素を作ります。 
+
 		<canvas id="can"></canvas>
 
-2. Circle.jsファイルを読み込みます。  
+2. Circle.jsファイルを読み込みます。 
+
 		<script src="Circle.js"></script>
 
 3. 読み込んだあとに新しくスクリプトタグを用意するか、新しくJSファイルを作成し読み込みます。
